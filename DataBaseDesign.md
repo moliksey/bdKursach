@@ -1,0 +1,68 @@
+#Список сущностей и связей
+____
+- Player - сущность описывает игрока, тренера или аналитика
+    - Player_id (Primary key)
+    - NickName - Никнейнм
+    - Name - Имя 
+    - Surname - Фамилия 
+    - Age - Возраст 
+    - Gender - Пол 
+    - Country - страна гражданства игрока
+---
+- Team - сущность описывает команду
+    - Team_id (Primary key)
+    - Name - название команды
+    - League - родная лига организации(Foreign key, связанный с Tournament_id из таблицы Tournament(One for one))(не может быть международным чемпионатом)
+    - Owner - компания или человек владеющий организациеей
+    - Active - указывает на то, состоит ли команда в какой-то лиге
+---
+- Career - сущность связвнная с игроком(Many for one) и командой(Many for one) описывающая период игры человека за команду и на какой роли он находился
+    - Career_id (Primary key)
+    - Role - роль участника команды(тренер/аналитик/одна из 5 основных ролей/запасной на одной из ролей) (Foreign key, связанный с Role_id из таблицы Role)
+    - StartDate - дата начала сотрудничества человека и команды (считается с первой игры)
+    - FinishDate - дата конца сотрудничества человека и команды (считается с последней игры)(Для текущей команды - пустое поле)
+    - Active - указывает на ТЕКУЩУЮ роль игрока в определенной команде
+    - PlayerId - указывает на игрока (Foreign key, связанный с Player_id из таблицы Player)
+    - TeamId - указывает на команду (Foreign key, связанный с Team_id из таблицы Team)
+---
+- Tournament сущность описывает лигу или турнир 
+    - Tournament_id (Primary key)
+    - Name - название турнира
+    - Abbreviation - сокращение название турнира или лиги
+    - StartDate - дата начала турнира (считается с первой игры)
+    - FinishDate - дата конца турнира (считается с последней игры) 
+    - Winner - команда побеителей турнира (Foreign key, связанный с Team_id из таблицы Team)
+    - MVP - most valueble player (Foreign key, связанный с Player_id из таблицы Player)
+    - Broadcast - трансляции и данные о них (Foreign key, связанный с Broadcast_id из таблицы Broadcast)
+---
+- Game сущность описывающая игру проведенную или запланировнную
+    - Game_id (Primary key)
+    - Date - дата проведения игры
+    - Tournament - турнир в рамках которого происходила игра (Foreign key, связанный с Tournament_id из таблицы Tournament)
+    - Team1 - команда участница (Foreign key, связанный с Team_id из таблицы Team)
+    - Team2 -команда участница (Foreign key, связанный с Team_id из таблицы Team)
+    - Winner - 1 или 2 обозначающий номер победившей в игре команды
+    - Score - счет по картам
+---
+- TeamsToTournaments таблица соответствия турнира и команд
+    - Tournament_id (Foreign key, связанный с Tournament_id из таблицы Tournament)
+    - Team_id (Foreign key, связанный с Team_id из таблицы Team)
+---
+- Broadcast сущность описывающая каналы, трансляции и количество зрителей турнира
+    - Broadcast_id (Primary key)
+    - AvgViewers - среднее количество зрителей
+    - PeakViewers - максимальное количество зрителей
+    - Stream  - ссылки на трансляции (Foreign key, связанный с Stream_id из таблицы Stream)
+---
+- Stream сущность со ссылкой на оффициальный канал трянсляции турнира
+    - Stream_id (Primary key)
+    - PLatform - платформа трансляции (Foreign key, связанный с Platform_id из таблицы Platform)
+    - URL - ссылка на официальный канал трансляции
+---
+- Platform платформы стриминга
+    - Platform_id (Primary key)
+    - Name - название платформы
+---
+- Role роли в команде
+    - Role_id (Primary key)
+    - Name - название роли
